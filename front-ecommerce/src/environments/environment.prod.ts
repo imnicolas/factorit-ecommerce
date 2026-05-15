@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api-factor-it.onrender.com'
+  apiUrl: 'https://factorit-ecommerce.onrender.com'
 };
