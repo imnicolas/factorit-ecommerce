@@ -1,0 +1,85 @@
+<div class="page">
+  <header class="page-header">
+    <h1>Clientes VIP</h1>
+    <p class="page-subtitle">Elegí mes y año, y consultá quién fue VIP, quién pasó a serlo y quién lo perdió.</p>
+  </header>
+
+  <section class="card filters-card">
+    <div class="filters">
+      <div class="form-group">
+        <label class="label" for="mes">Mes</label>
+        <select id="mes" class="select" [(ngModel)]="queryMes">
+          <option *ngFor="let m of meses" [ngValue]="m.value">{{ m.label }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="label" for="anio">Año</label>
+        <input id="anio" class="input" type="number" [(ngModel)]="queryAnio" min="2000" max="2100">
+      </div>
+      <button class="btn btn-primary" (click)="applyFilters()">Aplicar</button>
+    </div>
+  </section>
+
+  <nav class="tabs">
+    <button class="tab"
+            [class.active]="activeTab === 'actuales'"
+            (click)="selectTab('actuales')">
+      <span class="tab-icon">★</span> VIPs vigentes
+    </button>
+    <button class="tab"
+            [class.active]="activeTab === 'nuevos'"
+            (click)="selectTab('nuevos')">
+      <span class="tab-icon">+</span> Nuevos del mes
+    </button>
+    <button class="tab"
+            [class.active]="activeTab === 'perdidos'"
+            (click)="selectTab('perdidos')">
+      <span class="tab-icon">−</span> Perdidos en el mes
+    </button>
+  </nav>
+
+  <section class="card results">
+    <div class="results-header">
+      <div>
+        <h2>{{ sectionTitle }}</h2>
+        <p class="hint">{{ sectionHint }}</p>
+      </div>
+      <span class="badge" *ngIf="!loading">{{ totalElements }} {{ totalElements === 1 ? 'cliente' : 'clientes' }}</span>
+    </div>
+
+    <div class="alert error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <div class="state-loading" *ngIf="loading">Cargando...</div>
+
+    <table class="data-table" *ngIf="!loading && clients.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>DNI</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let client of clients">
+          <td>#{{ client.id }}</td>
+          <td>{{ client.nombre }}</td>
+          <td>{{ client.apellido }}</td>
+          <td>{{ client.dni }}</td>
+          <td>
+            <span class="status-pill" [class.vip]="client.esVip" [class.no-vip]="!client.esVip">
+              {{ client.esVip ? 'VIP' : 'No VIP' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="empty-state" *ngIf="!loading && clients.length === 0 && !errorMessage">
+      <p>No hay clientes para mostrar en esta vista.</p>
+    </div>
+
+    <app-pager [page]="page" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-pager>
+  </section>
+</div>

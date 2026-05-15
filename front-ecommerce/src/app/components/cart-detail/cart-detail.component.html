@@ -1,0 +1,142 @@
+<div class="page" *ngIf="cart">
+  <header class="page-header">
+    <div class="title-row">
+      <div>
+        <h1>Carrito #{{ cart.id }}</h1>
+        <span class="estado-pill" [ngClass]="'estado-' + cart.state.toLowerCase()">{{ cart.state }}</span>
+      </div>
+      <div class="actions" *ngIf="!isReadonly">
+        <button class="btn btn-secondary" (click)="deleteCart()">Eliminar carrito</button>
+        <button class="btn btn-success" (click)="finalizePurchase()">Finalizar compra</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="alert error" *ngIf="errorMessage">{{ errorMessage }}</div>
+  <div class="alert success" *ngIf="successMessage">{{ successMessage }}</div>
+
+  <div class="info-grid">
+    <section class="card">
+      <h2>Cliente</h2>
+      <div class="info-row">
+        <span class="info-label">ID</span>
+        <span>#{{ cart.cliente.id }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Nombre</span>
+        <span>{{ cart.cliente.nombre }} {{ cart.cliente.apellido }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">DNI</span>
+        <span>{{ cart.cliente.dni }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">VIP</span>
+        <span class="status-pill" [class.vip]="cart.cliente.esVip" [class.no-vip]="!cart.cliente.esVip">
+          {{ cart.cliente.esVip ? 'VIP' : 'No VIP' }}
+        </span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Resumen</h2>
+      <div class="info-row">
+        <span class="info-label">Tipo</span>
+        <span class="tipo-pill">{{ cart.tipo }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Fecha</span>
+        <span>{{ cart.dateCreated }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Monto bruto</span>
+        <span>$ {{ cart.montoBruto | number:'1.2-2' }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Descuento</span>
+        <span class="discount">- $ {{ cart.descuento | number:'1.2-2' }}</span>
+      </div>
+      <div class="info-row total-row">
+        <span class="info-label">Total a pagar</span>
+        <span class="total">$ {{ cart.total | number:'1.2-2' }}</span>
+      </div>
+    </section>
+  </div>
+
+  <section class="card" *ngIf="!isReadonly">
+    <h2>Agregar producto</h2>
+    <div class="form-inline">
+      <div class="form-group">
+        <label class="label">Producto</label>
+        <select class="select" [(ngModel)]="selectedProductId">
+          <option [ngValue]="null" disabled>Elegí un producto</option>
+          <option *ngFor="let prod of products" [ngValue]="prod.id">
+            {{ prod.nombre }} — $ {{ prod.precio }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="label">Cantidad</label>
+        <input class="input" type="number" [(ngModel)]="selectedQuantity" min="1">
+      </div>
+      <button class="btn btn-primary" (click)="addProduct()" [disabled]="!selectedProductId">Agregar</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Productos</h2>
+    <table class="data-table" *ngIf="cart.detalles.length > 0">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th class="numeric">Precio unit.</th>
+          <th class="qty-col">Cantidad</th>
+          <th class="numeric">Subtotal</th>
+          <th class="actions-col" *ngIf="!isReadonly"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of cart.detalles">
+          <td>{{ item.productoNombre }}</td>
+          <td class="numeric">$ {{ item.precioUnitario | number:'1.2-2' }}</td>
+          <td class="qty-col">
+            <input *ngIf="!isReadonly"
+                   class="qty-input"
+                   type="number"
+                   min="1"
+                   [ngModel]="item.cantidad"
+                   (change)="onQuantityChange(item, $event)">
+            <span *ngIf="isReadonly">{{ item.cantidad }}</span>
+          </td>
+          <td class="numeric">$ {{ item.subtotal | number:'1.2-2' }}</td>
+          <td class="actions-col" *ngIf="!isReadonly">
+            <button class="icon-btn icon-btn-danger"
+                    title="Eliminar producto"
+                    (click)="removeProduct(item.productoId)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"></path>
+                <path d="M10 11v6"></path>
+                <path d="M14 11v6"></path>
+                <path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path>
+              </svg>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="empty-state" *ngIf="cart.detalles.length === 0">
+      <p>El carrito está vacío. Agregá un producto arriba.</p>
+    </div>
+  </section>
+</div>
+
+<div class="page state-loading" *ngIf="!cart && !errorMessage">
+  <p>Cargando carrito...</p>
+</div>
+
+<div class="page" *ngIf="!cart && errorMessage">
+  <div class="alert error">{{ errorMessage }}</div>
+  <button class="btn btn-secondary" routerLink="/carts">Volver</button>
+</div>

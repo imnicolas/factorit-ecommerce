@@ -1,0 +1,15 @@
+# Engram skill registry cache (local-only)
+.atl/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Local build outputs (los subproyectos tienen .gitignore propio, esto es defensivo)
+**/node_modules/
+**/target/
+**/dist/

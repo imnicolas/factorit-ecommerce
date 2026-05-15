@@ -1,0 +1,22 @@
+<div class="app-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>Carrito</h2>
+    </div>
+    <nav class="sidebar-nav">
+      <ul>
+        <li><a routerLink="/carts" routerLinkActive="active">Carritos</a></li>
+        <li><a routerLink="/vip-clients" routerLinkActive="active">Clientes VIP</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+<!-- Dialog global -->
+<app-dialog></app-dialog>

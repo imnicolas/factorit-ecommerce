@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://ecommerce.factorit.com/soap"
+           targetNamespace="http://ecommerce.factorit.com/soap"
+           elementFormDefault="qualified">
+
+  <xs:annotation>
+    <xs:documentation>
+      Schema del servicio SOAP de e-commerce. Expone consultas sobre productos,
+      carritos y clientes VIP.
+    </xs:documentation>
+  </xs:annotation>
+
+  <!-- ─────────────────────────────────────────────────────────────
+       Enums y tipos restringidos (validados automáticamente por SOAP UI)
+       ───────────────────────────────────────────────────────────── -->
+
+  <xs:simpleType name="EstadoCarritoEnum">
+    <xs:annotation>
+      <xs:documentation>Estados posibles de un carrito.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ABIERTO"/>
+      <xs:enumeration value="COMPLETADO"/>
+      <xs:enumeration value="DESTRUIDO"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="TipoCarritoEnum">
+    <xs:annotation>
+      <xs:documentation>Tipos de carrito (determinan el descuento aplicado).</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="COMUN"/>
+      <xs:enumeration value="FECHA_ESPECIAL"/>
+      <xs:enumeration value="VIP"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="MesType">
+    <xs:annotation>
+      <xs:documentation>Mes del año (1-12).</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="1"/>
+      <xs:maxInclusive value="12"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="AnioType">
+    <xs:annotation>
+      <xs:documentation>Año (entre 2020 y 2100).</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="2020"/>
+      <xs:maxInclusive value="2100"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="IdType">
+    <xs:annotation>
+      <xs:documentation>Identificador positivo.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:long">
+      <xs:minInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="DniType">
+    <xs:annotation>
+      <xs:documentation>DNI: 7 u 8 dígitos numéricos.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\d{7,8}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="NombreType">
+    <xs:annotation>
+      <xs:documentation>Texto entre 1 y 255 caracteres.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="255"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="MontoType">
+    <xs:annotation>
+      <xs:documentation>Monto en pesos, no negativo, hasta 2 decimales.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="0"/>
+      <xs:fractionDigits value="2"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- ─────────────────────────────────────────────────────────────
+       Tipos complejos del dominio
+       ───────────────────────────────────────────────────────────── -->
+
+  <xs:complexType name="ClienteSoap">
+    <xs:annotation>
+      <xs:documentation>Datos de un cliente.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="id" type="tns:IdType"/>
+      <xs:element name="nombre" type="tns:NombreType"/>
+      <xs:element name="apellido" type="tns:NombreType"/>
+      <xs:element name="dni" type="tns:DniType"/>
+      <xs:element name="esVip" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ProductoSoap">
+    <xs:annotation>
+      <xs:documentation>Producto del catálogo.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="id" type="tns:IdType"/>
+      <xs:element name="nombre" type="tns:NombreType"/>
+      <xs:element name="precio" type="tns:MontoType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CarritoSoap">
+    <xs:annotation>
+      <xs:documentation>Carrito con sus totales y datos del cliente.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="id" type="tns:IdType"/>
+      <xs:element name="tipo" type="tns:TipoCarritoEnum"/>
+      <xs:element name="estado" type="tns:EstadoCarritoEnum"/>
+      <xs:element name="fecha" type="xs:string"/>
+      <xs:element name="montoBruto" type="tns:MontoType"/>
+      <xs:element name="descuento" type="tns:MontoType"/>
+      <xs:element name="total" type="tns:MontoType"/>
+      <xs:element name="cliente" type="tns:ClienteSoap"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ─────────────────────────────────────────────────────────────
+       Operación 1: getProductos
+       ───────────────────────────────────────────────────────────── -->
+
+  <xs:element name="GetProductosRequest">
+    <xs:annotation>
+      <xs:documentation>Lista todos los productos del catálogo, ordenados por nombre.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="GetProductosResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="producto" type="tns:ProductoSoap" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ─────────────────────────────────────────────────────────────
+       Operación 2: getCarritoById
+       ───────────────────────────────────────────────────────────── -->
+
+  <xs:element name="GetCarritoByIdRequest">
+    <xs:annotation>
+      <xs:documentation>Devuelve el detalle de un carrito por ID. Falla con NOT_FOUND si no existe.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="id" type="tns:IdType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetCarritoByIdResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="carrito" type="tns:CarritoSoap"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ─────────────────────────────────────────────────────────────
+       Operación 3: getClientesVip
+       ───────────────────────────────────────────────────────────── -->
+
+  <xs:element name="GetClientesVipRequest">
+    <xs:annotation>
+      <xs:documentation>
+        Devuelve los clientes VIP del mes/año dado. Un cliente es VIP en un mes si
+        la suma de sus carritos COMPLETADOS en ese mes supera los $10.000.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="anio" type="tns:AnioType"/>
+        <xs:element name="mes" type="tns:MesType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetClientesVipResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="cliente" type="tns:ClienteSoap" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

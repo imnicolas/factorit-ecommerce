@@ -1,0 +1,389 @@
+/* ─────────────────────────────────────────────────────────────────
+   Design tokens — Mercado Pago inspired
+   ───────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Colors */
+  --color-primary: #009EE3;
+  --color-primary-dark: #007EB5;
+  --color-primary-light: #E5F4FB;
+  --color-accent: #FFE600;
+  --color-accent-dark: #E6CE00;
+
+  --color-success: #00A650;
+  --color-success-light: #E5F6EC;
+  --color-warning: #FFB80F;
+  --color-warning-light: #FFF6E0;
+  --color-danger: #E53935;
+  --color-danger-light: #FDECEA;
+
+  --color-text: #333333;
+  --color-text-secondary: #737373;
+  --color-text-disabled: #999999;
+  --color-text-on-primary: #FFFFFF;
+
+  --color-bg-app: #F5F5F5;
+  --color-bg-card: #FFFFFF;
+  --color-bg-hover: #FAFAFA;
+
+  --color-border: #E5E5E5;
+  --color-border-strong: #CCCCCC;
+
+  /* Typography */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-input: 16px;
+  --font-size-h3: 18px;
+  --font-size-h2: 24px;
+  --font-size-h1: 32px;
+
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Base
+   ───────────────────────────────────────────────────────────────── */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  background-color: var(--color-bg-app);
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+h1, h2, h3, h4 {
+  color: var(--color-text);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Layout: pages
+   ───────────────────────────────────────────────────────────────── */
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: var(--space-5);
+}
+
+.page-header h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-1);
+}
+
+.page-subtitle {
+  margin: 0;
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+}
+
+.card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin-bottom: var(--space-4);
+  box-shadow: var(--shadow-md);
+}
+
+.filters-card {
+  padding: var(--space-4) var(--space-5);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Form elements
+   ───────────────────────────────────────────────────────────────── */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-4);
+}
+
+.label {
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.required {
+  color: var(--color-danger);
+  margin-left: 2px;
+}
+
+.helper {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.input,
+.select {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.input:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 158, 227, 0.15);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Buttons
+   ───────────────────────────────────────────────────────────────── */
+
+.btn {
+  padding: var(--space-2) var(--space-5);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-family);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--transition-fast), opacity var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-text-on-primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border-strong);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--color-bg-hover);
+}
+
+.btn-success {
+  background: var(--color-success);
+  color: var(--color-text-on-primary);
+}
+
+.btn-success:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: var(--color-text-on-primary);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #c62828;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Alerts
+   ───────────────────────────────────────────────────────────────── */
+
+.alert {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  font-size: var(--font-size-base);
+}
+
+.alert.error {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+}
+
+.alert.success {
+  background: var(--color-success-light);
+  color: var(--color-success);
+  border: 1px solid var(--color-success);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Data table
+   ───────────────────────────────────────────────────────────────── */
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-base);
+  vertical-align: middle;
+}
+
+.data-table th {
+  background: var(--color-bg-app);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.data-table tbody tr:hover {
+  background: var(--color-bg-hover);
+}
+
+.numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Pills / badges
+   ───────────────────────────────────────────────────────────────── */
+
+.badge {
+  background: var(--color-bg-app);
+  color: var(--color-text);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+}
+
+.tipo-pill {
+  display: inline-block;
+  padding: 3px var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.3px;
+}
+
+.estado-pill {
+  display: inline-block;
+  padding: 3px var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.3px;
+}
+
+.estado-abierto {
+  background: var(--color-warning-light);
+  color: var(--color-warning);
+}
+
+.estado-completado {
+  background: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.estado-destruido {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.3px;
+}
+
+.status-pill.vip {
+  background: var(--color-warning-light);
+  color: var(--color-warning);
+}
+
+.status-pill.no-vip {
+  background: var(--color-bg-app);
+  color: var(--color-text-secondary);
+}
+
+.vip-pill {
+  display: inline-block;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-warning-light);
+  color: var(--color-warning);
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.3px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Empty / loading states
+   ───────────────────────────────────────────────────────────────── */
+
+.state-loading,
+.empty-state {
+  padding: var(--space-6) 0;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+}

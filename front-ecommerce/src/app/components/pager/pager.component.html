@@ -1,0 +1,5 @@
+<nav class="pager" *ngIf="totalPages > 1">
+  <button class="pager-btn" (click)="prev()" [disabled]="page === 0">‹ Anterior</button>
+  <span class="pager-info">Página {{ page + 1 }} de {{ totalPages }}</span>
+  <button class="pager-btn" (click)="next()" [disabled]="page >= totalPages - 1">Siguiente ›</button>
+</nav>

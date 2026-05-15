@@ -1,0 +1,81 @@
+.app-layout {
+  display: flex;
+  height: 100vh;
+  margin: 0;
+  background-color: var(--color-bg-app);
+}
+
+.sidebar {
+  width: 240px;
+  background: var(--color-primary);
+  color: var(--color-text-on-primary);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-md);
+}
+
+.sidebar-header {
+  padding: var(--space-5) var(--space-4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-on-primary);
+  letter-spacing: 0.3px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: var(--space-3) 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav li {
+  margin: 0;
+  position: relative;
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--space-3) var(--space-5);
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.sidebar-nav a:hover {
+  background: rgba(255, 255, 255, 0.10);
+  color: var(--color-text-on-primary);
+}
+
+.sidebar-nav a.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-text-on-primary);
+}
+
+.sidebar-nav a.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  background: var(--color-accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.main-content {
+  flex: 1;
+  padding: var(--space-6) var(--space-5);
+  overflow-y: auto;
+}

@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ecommerce-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      # Los .sql en este directorio se ejecutan SOLO en el primer init del volumen.
+      - ./ms-ecommerce/scripts/scripts.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  ms-ecommerce:
+    build:
+      context: ./ms-ecommerce
+    container_name: ms-ecommerce
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_SSL_MODE: disable
+      # CORS: el front corre en localhost:4200 desde el browser, así que se permite ese origen.
+      cors.allowed-origins: http://localhost:4200
+    ports:
+      - "8080:8080"
+
+  front-ecommerce:
+    build:
+      context: ./front-ecommerce
+    container_name: front-ecommerce
+    depends_on:
+      - ms-ecommerce
+    ports:
+      # 4200 en el host porque environment.ts apunta a http://localhost:8080 y CORS del back permite localhost:4200.
+      - "4200:80"
+
+volumes:
+  postgres-data:
