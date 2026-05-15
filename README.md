@@ -1,36 +1,49 @@
-# Cómo levantar el proyecto en local (Windows)
+# Ecommerce (Angular + Spring Boot + PostgreSQL)
 
-Este proyecto es una aplicación Frontend desarrollada en Angular.
+Monorepo con backend (`ms-ecommerce/`), frontend (`front-ecommerce/`) y `docker-compose.yaml` para levantar todo en local.
 
-## Requisitos previos
+## Requisitos
 
-- **Node.js**: Asegúrate de tener instalado Node.js (se recomienda una versión LTS compatible con Angular 14).
-- **Angular CLI**: Puedes instalarlo globalmente con `npm install -g @angular/cli`, aunque también puedes usar los comandos locales de `npm`.
+- [Docker](https://docs.docker.com/get-docker/) y Docker Compose v2
 
-## Pasos para la ejecución
+## Levantar en local con Docker Compose
 
-### 1. Instalar dependencias
+Desde la raíz del repositorio:
 
-Abre una terminal en la raíz del proyecto `front-carrito-factorit` y ejecuta:
-
-```cmd
-npm install
+```bash
+docker compose up --build
 ```
 
-### 2. Configurar la URL del Backend (Opcional)
+Cuando termine de arrancar:
 
-El proyecto está configurado para apuntar al backend en `http://localhost:8080` por defecto en el archivo `src/environments/environment.ts`. Si tu backend corre en otro puerto, modifícalo allí.
+| Servicio   | URL |
+|------------|-----|
+| Frontend   | http://localhost:4200 |
+| API (REST) | http://localhost:8080 |
+| Swagger    | http://localhost:8080/swagger-ui.html |
+| PostgreSQL | puerto **5433** en el host (usuario/clave/db por defecto: `postgres`) |
 
-### 3. Ejecutar la Aplicación
+La primera vez, Postgres ejecuta el seed en `ms-ecommerce/scripts/scripts.sql` al crear el volumen.
 
-Para levantar el servidor de desarrollo, ejecuta:
+### Reinicio “de cero” (borra datos locales)
 
-```cmd
-npm start
+```bash
+docker compose down -v
+docker compose up --build
 ```
-O también:
-```cmd
-ng serve
-```
 
-La aplicación se levantará en `http://localhost:4200`. Ábrela en tu navegador para interactuar con ella.
+## Despliegue en la nube (orientación)
+
+Tu stack anterior (**Render API + Vercel front + Supabase DB**) encaja bien con este proyecto:
+
+| Pieza | Dónde | Notas |
+|-------|--------|--------|
+| **Base de datos** | Supabase (PostgreSQL) | Creá el proyecto, copiá host, puerto, usuario, contraseña y nombre de DB. En la API definí `DB_SSL_MODE=require` (valor por defecto del repo). Ejecutá el SQL inicial (`ms-ecommerce/scripts/scripts.sql`) en el SQL editor de Supabase si la base está vacía. |
+| **Backend (JAR)** | Render, Railway, Fly.io, etc. | Imagen Docker o build Maven + `java -jar`. Definí las mismas variables que en `application.yaml`: `PORT` (si el proveedor lo inyecta, usalo), `DB_*`, `DB_SSL_MODE`, `CORS_ALLOWED_ORIGINS` con la URL **exacta** del front en producción (ej. `https://tu-proyecto.vercel.app`). |
+| **Frontend** | Vercel, Netlify, Cloudflare Pages | Build de Angular en modo producción: `environment.prod.ts` debe tener `apiUrl` apuntando a la URL pública de la API (HTTPS). |
+
+Otras opciones válidas: **todo en un VPS** (Docker Compose igual que en local, con dominio y TLS con Caddy/Traefik), o **Google Cloud Run / AWS ECS** si preferís contenedores gestionados.
+
+## Documentación adicional
+
+En la raíz del repo hay una guía más detallada para desarrollo sin Docker en `CLAUDE.md` (comandos Maven, `ng serve`, variables de entorno).

@@ -8,7 +8,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
-    // Si Railway no define cors.allowed-origins, usa localhost por defecto
     @Value("${cors.allowed-origins:http://localhost:4200}")
     private String allowedOrigins;
 
