@@ -34,7 +34,7 @@ docker compose up --build
 
 ## Despliegue en la nube (orientación)
 
-Tu stack anterior (**Render API + Vercel front + Supabase DB**) encaja bien con este proyecto:
+Stack (**Render API + Vercel front + Supabase DB**)
 
 | Pieza | Dónde | Notas |
 |-------|--------|--------|
